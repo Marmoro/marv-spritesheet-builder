@@ -55,7 +55,7 @@ async function generateSpriteSheets(images, outputPath, progressStatus) {
 async function optimizeImage(inputBuffer) {
   return await imagemin.buffer(inputBuffer, {
     plugins: [
-      imageminPngquant({ quality: [0.8, 0.9] }),
+      imageminPngquant({ quality: [0.9, 1.0], dithering: false, strip: true, speed:2 }),
     ],
   });
 }
