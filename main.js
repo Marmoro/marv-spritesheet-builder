@@ -6,8 +6,8 @@ const { enable } = require('@electron/remote/main');
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 700,
+    height: 800,
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true,
@@ -18,6 +18,9 @@ function createWindow() {
 
   initialize();
   mainWindow.loadFile('index.html');
+  
+  // Hide the menu bar
+  mainWindow.setMenuBarVisibility(false);
 }
 
 app.whenReady().then(createWindow);

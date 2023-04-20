@@ -2,11 +2,53 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Sprite Sheet Builder</title>
+    <title>Marv Sprite Sheet Builder v0.1</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <link rel="stylesheet" href="custom.css" />
   </head>
   <body>
-    <input type="file" id="fileInput" multiple />
-    <button id="generateButton">Generate Sprite Sheet</button>
+    <nav>
+      <div class="nav-wrapper">
+        <a href="#" class="brand-logo center">Marv Sprite Sheet Builder v0.1</a>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="row">
+        <div class="col s12">
+          <h5>Import Images</h5>
+          <input type="file" id="fileInput" accept="image/*" multiple />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <h5>Uploaded Images</h5>
+          <div id="uploadedImages"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s6">
+          <input id="exportFileName" type="text" class="validate" />
+          <label for="exportFileName">Export File Name</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <button id="generateButton" class="btn waves-effect waves-light">
+            Generate Sprite Sheet
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <h5>Progress</h5>
+          <div id="progressStatus"></div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="renderer.js"></script>
   </body>
 </html>

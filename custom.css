@@ -1,0 +1,24 @@
+/* Change the primary color */
+nav,
+.btn {
+  background-color: primary-color !important;
+}
+
+/* Change the secondary color (text color) */
+nav a.brand-logo,
+.btn {
+  color: secondary-color !important;
+}
+
+
+/* Change the primary color */
+nav,
+.btn {
+  background-color: #37474F !important;
+}
+
+/* Change the secondary color (text color) */
+nav a.brand-logo,
+.btn {
+  color: #ffffff !important;
+}
