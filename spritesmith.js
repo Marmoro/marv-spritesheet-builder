@@ -39,8 +39,9 @@ async function generateSpriteSheets(images, outputPath, progressStatus) {
 
     progressStatus.textContent = 'Combining sprite sheets...';
     const finalSpriteSheet = await generateSpriteSheet(intermediateFiles, 'top-down');
+    const optimizedSpriteSheet = await optimizeImage(finalSpriteSheet); // Add this line
 
-    await fs.promises.writeFile(outputPath, finalSpriteSheet);
+    await fs.promises.writeFile(outputPath, optimizedSpriteSheet);
 
     await Promise.all(intermediateFiles.map((filePath) => fs.promises.unlink(filePath)));
 
@@ -49,6 +50,14 @@ async function generateSpriteSheets(images, outputPath, progressStatus) {
     console.error(err);
     progressStatus.textContent = 'An error occurred while generating the sprite sheet.';
   }
+}
+
+async function optimizeImage(inputBuffer) {
+  return await imagemin.buffer(inputBuffer, {
+    plugins: [
+      imageminPngquant({ quality: [0.8, 0.9] }),
+    ],
+  });
 }
 
 module.exports = {

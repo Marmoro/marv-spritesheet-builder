@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>Marv Sprite Sheet Builder v0.1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web&display=swap" rel="stylesheet">
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
@@ -19,7 +20,10 @@
       <div class="row">
         <div class="col s12">
           <h5>Import Images</h5>
-          <input type="file" id="fileInput" accept="image/*" multiple />
+          <div id="dropZone" class="drop-zone">
+            <input type="file" id="fileInput" accept="image/*" multiple hidden />
+            <p>Drag and drop files here or click to select</p>
+          </div>
         </div>
       </div>
       <div class="row">
@@ -30,14 +34,12 @@
       </div>
       <div class="row">
         <div class="input-field col s6">
-          <input id="exportFileName" type="text" class="validate" />
+          <input id="exportFileName" type="text" placeholder="idle" value="idle" class="validate" />
           <label for="exportFileName">Export File Name</label>
         </div>
-      </div>
-      <div class="row">
-        <div class="col s12">
+        <div class="col s6">
           <button id="generateButton" class="btn waves-effect waves-light">
-            Generate Sprite Sheet
+            Generate
           </button>
         </div>
       </div>

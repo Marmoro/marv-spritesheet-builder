@@ -1,3 +1,12 @@
+
+body {
+  font-family: 'Titillium Web', sans-serif;
+}
+
+h5 {
+  font-weight: bold;
+}
+
 /* Change the primary color */
 nav,
 .btn {
@@ -10,6 +19,9 @@ nav a.brand-logo,
   color: secondary-color !important;
 }
 
+nav,.btn {
+  box-shadow:none;
+}
 
 /* Change the primary color */
 nav,
@@ -21,4 +33,25 @@ nav,
 nav a.brand-logo,
 .btn {
   color: #ffffff !important;
+}
+
+.btn {
+  font-weight: bold;
+}
+
+.drop-zone {
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.drop-zone:hover {
+  background-color: #f9f9f9;
+}
+
+.drop-zone.dragover {
+  border-color: #000;
+  background-color: #f0f0f0;
 }
