@@ -52,30 +52,36 @@ document.getElementById('generateButton').addEventListener('click', async () => 
     return;
   }
 
-  // const outputPath = path.join(path.dirname(images[0]), exportFileName + '.png');
   const outputPath = path.join(firstImageDirectory, exportFileName + '.png');
-
-  // Show the progress of the sprite sheet creation
   const progressStatus = document.getElementById('progressStatus');
-  progressStatus.textContent = 'Generating sprite sheet...';
+  progressStatus.textContent = 'Generating sprite sheets...';
 
   try {
-    const result = await new Promise((resolve, reject) => {
-      Spritesmith.run(
-        {
-          src: images,
-          algorithm: 'top-down', // Set the algorithm to 'top-down' to align images in a single row
-        },
-        async (err, result) => {
-          if (err) reject(err);
-          else resolve(result);
-        }
-      );
-    });
+    // Split the images into chunks of 8 and generate intermediate sprite sheets
+    const imageChunks = chunkArray(images, 8);
+    const intermediateSpriteSheets = await Promise.all(
+      imageChunks.map((chunk) => generateSpriteSheet(chunk, 'left-right'))
+    );
 
-    fs.writeFileSync(outputPath, result.image);
+    // Save the intermediate sprite sheets as temporary files
+    const intermediateFiles = await Promise.all(
+      intermediateSpriteSheets.map(async (spriteSheet, index) => {
+        const tempFilePath = path.join(os.tmpdir(), `intermediate_${index}.png`);
+        await fs.promises.writeFile(tempFilePath, spriteSheet);
+        return tempFilePath;
+      })
+    );
 
-    // Update the progress status
+    // Combine the intermediate sprite sheets into the final sprite sheet
+    progressStatus.textContent = 'Combining sprite sheets...';
+    const finalSpriteSheet = await generateSpriteSheet(intermediateFiles, 'top-down');
+
+    // Save the final sprite sheet to the output path
+    await fs.promises.writeFile(outputPath, finalSpriteSheet);
+
+    // Clean up temporary files
+    await Promise.all(intermediateFiles.map((filePath) => fs.promises.unlink(filePath)));
+
     progressStatus.textContent = 'Sprite sheet successfully generated!';
   } catch (err) {
     console.error(err);
@@ -95,4 +101,24 @@ async function findMaxSize(files) {
   }
 
   return { width: maxWidth, height: maxHeight };
+}
+
+function chunkArray(arr, chunkSize) {
+  const chunks = [];
+  for (let i = 0; i < arr.length; i += chunkSize) {
+    chunks.push(arr.slice(i, i + chunkSize));
+  }
+  return chunks;
+}
+
+async function generateSpriteSheet(images, algorithm) {
+  return new Promise((resolve, reject) => {
+    Spritesmith.run({ src: images, algorithm }, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result.image);
+      }
+    });
+  });
 }
