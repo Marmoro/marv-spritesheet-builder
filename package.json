@@ -12,6 +12,11 @@
   "dependencies": {
     "@electron/remote": "^2.0.9",
     "electron": "^24.1.2",
+    "esm": "^3.2.25",
+    "imagemin": "^7.0.1",
+    "imagemin-gifsicle": "^7.0.0",
+    "imagemin-mozjpeg": "^9.0.0",
+    "imagemin-pngquant": "^9.0.2",
     "rimraf": "^4.4.1",
     "sharp": "^0.32.0",
     "spritesmith": "^3.4.1"
