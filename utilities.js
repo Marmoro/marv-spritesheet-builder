@@ -1,4 +1,8 @@
 
+const sharp = require('sharp');
+const os = require('os');
+const path = require('path');
+
 
 async function findMaxSize(files) {
   let maxWidth = 0;
