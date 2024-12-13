@@ -18,7 +18,7 @@ $groupedFiles = $pngFiles | Group-Object { $_.Name -replace '_\d+\.png$', '' }
 
 foreach ($group in $groupedFiles) {
     $moveName = $group.Name
-    $outputFile = Join-Path $InputDirectory "$characterName-$moveName.png"
+    $outputFile = Join-Path $InputDirectory "robo_$moveName.png"
 
     # Sort files numerically
     $sortedFiles = $group.Group | Sort-Object { 
