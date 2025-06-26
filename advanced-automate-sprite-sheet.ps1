@@ -4,8 +4,11 @@ param (
 )
 
 # Get all PNG files in the specified directory
-# $pngFiles = Get-ChildItem -Path $InputDirectory -Filter *.png | Sort-Object Name
-$pngFiles = Get-ChildItem -Path $InputDirectory -Filter *.png | Where-Object { $_.Name -match '_\d+\.png$' } | Sort-Object Name
+# Include both files ending with _digits.png and _n.png
+$pngFiles = Get-ChildItem -Path $InputDirectory -Filter *.png | 
+    Where-Object { $_.Name -match '_\d+\.png$' -or $_.Name -match '_n\.png$' } | 
+    Sort-Object Name
+    
 $characterName = "robo"
 
 if ($pngFiles.Count -eq 0) {
@@ -13,16 +16,37 @@ if ($pngFiles.Count -eq 0) {
     exit
 }
 
-# Group files by move name
-$groupedFiles = $pngFiles | Group-Object { $_.Name -replace '_\d+\.png$', '' }
+# Group files by move name, but handle normal maps specially
+$groupedFiles = $pngFiles | Group-Object { 
+    if ($_.Name -match '_n\.png$') {
+        # For normal maps, group by the name before "_n"
+        $_.Name -replace '_n\.png$', '_normal'
+    } else {
+        # For regular textures, keep original grouping
+        $_.Name -replace '_\d+\.png$', ''
+    }
+}
 
 foreach ($group in $groupedFiles) {
     $moveName = $group.Name
     $outputFile = Join-Path $InputDirectory "robo_$moveName.png"
 
-    # Sort files numerically
+    # Determine if this is a normal map group
+    $isNormalMap = $moveName -match '_normal$'
+    if ($isNormalMap) {
+        $moveName = $moveName -replace '_normal$', ''
+        $outputFile = Join-Path $InputDirectory "robo_${moveName}_n.png"
+    }
+
+    # Sort files numerically (normal maps will be sorted properly too)
     $sortedFiles = $group.Group | Sort-Object { 
-        [int]($_.Name -replace '.*_(\d+)\.png$', '$1')
+        if ($_.Name -match '_n\.png$') {
+            # Give normal maps a specific sort value if needed
+            0  # This will place them at the beginning if mixed with numbered files
+        } else {
+            # For regular files, sort by the number
+            [int]($_.Name -replace '.*_(\d+)\.png$', '$1')
+        }
     }
 
     # Create the input string for the Electron app
@@ -31,7 +55,7 @@ foreach ($group in $groupedFiles) {
     # Run the Electron app
     $electronCommand = "npx electron . --input=$inputString --output=$outputFile"
 
-    Write-Host "Processing $moveName..."
+    Write-Host "Processing $moveName $(if ($isNormalMap) {'(normal maps)'})..."
     Write-Host "Running command: $electronCommand"
     Invoke-Expression $electronCommand
 

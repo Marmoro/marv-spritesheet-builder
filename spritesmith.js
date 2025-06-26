@@ -32,7 +32,7 @@ async function generateSpriteSheets(images, outputPath, progressStatus) {
   progressStatus.textContent = 'Generating sprite sheets...';
 
   try {
-    const imageChunks = chunkArray(images, 8);
+    const imageChunks = chunkArray(images, 4);
     const intermediateSpriteSheets = await Promise.all(
       imageChunks.map((chunk) => generateSpriteSheet(chunk, 'left-right'))
     );
@@ -47,9 +47,9 @@ async function generateSpriteSheets(images, outputPath, progressStatus) {
 
     progressStatus.textContent = 'Combining sprite sheets...';
     const finalSpriteSheet = await generateSpriteSheet(intermediateFiles, 'top-down');
-    const optimizedSpriteSheet = await optimizeImage(finalSpriteSheet); // Add this line
+    // const optimizedSpriteSheet = await optimizeImage(finalSpriteSheet); // Add this line
 
-    await fs.promises.writeFile(outputPath, optimizedSpriteSheet);
+    await fs.promises.writeFile(outputPath, finalSpriteSheet);
 
     await Promise.all(intermediateFiles.map((filePath) => fs.promises.unlink(filePath)));
 
